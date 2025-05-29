@@ -1,0 +1,17 @@
+[
+  {
+    "name": "商品Ａ",
+    "amount": 500,
+    "currency": "JPY"
+  },
+  {
+    "name": "商品Ｂ",
+    "amount": 1000,
+    "currency": "JPY"
+  },
+  {
+    "name": "商品Ｃ",
+    "amount": 1200,
+    "currency": "JPY"
+  }
+]

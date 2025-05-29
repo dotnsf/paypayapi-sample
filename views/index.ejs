@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<title>PayPayAPI - sample</title>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+
+<link rel="shortcut icon" href="/icon.png" type="image/png"/>
+<link rel="icon" href="/icon.png" type="image/png"/>
+<link rel="apple-touch-icon" href="/icon.png"/>
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="apple-mobile-web-app-title" content="PayPayAPI - sample"/>
+
+<style type="text/css">
+html, body{
+  text-align: center;
+  background-color: #fafafa;
+  font-size: 20px;
+  color: #333;
+}
+.errortext{
+  border: 2px solid #f00;
+}
+</style>
+</head>
+<body>
+
+<div class="container_">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/">PayPayAPI - sample</a>
+    <ul class="navbar-nav mr-auto">
+    </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <select id="user_ids">
+          <option value="">（ユーザー選択）</option>
+<% if( user_ids && user_ids.length > 0 ){ for( var i = 0; i < user_ids.length; i ++ ){ %>
+          <option value="<%= user_ids[i] %>"><%= user_ids[i] %></option>
+<% } } %>
+        </select>
+      </li>
+    </ul>
+  </nav>
+</div>
+
+<div class="container">
+  <div>
+    <table id="transactions_table" class="table table-bordered">
+      <thead>
+        <tr>
+          <th>名前</th><th>価格</th><th>actions</th>
+        </tr>
+      </thead>
+      <tbody>
+<% for( var i = 0; i < items.length; i ++ ){ %>
+        <tr>
+          <td><%= items[i].name %></td>
+          <td><%= items[i].amount %> <%= items[i].currency %></td>
+          <td>
+            <button class="btn btn-xs btn-warning" onClick="buyItem('<%= items[i].name %>',<%= items[i].amount %>,'<%= items[i].currency %>');">Buy</button>
+          </td>
+        </tr>
+<% } %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+$(function(){
+  var cookies = document.cookie.split( '; ' );
+  for( var i = 0; i < cookies.length; i ++ ){
+    var str = cookies[i].split( "=" );
+    if( unescape( str[0] ) == "name" ){
+      $('#name').val( unescape( str[1] ) );
+    }
+  }
+
+  var params = location.search.substring( 1 ).split( '&' );
+  params.forEach( function( param ){
+    var str = param.split( '=' );
+    if( str[0] == 'room' ){
+      $('#room').val( unescape( str[1] ) );
+      $('#room').prop( 'readonly', 'readonly' );
+    }else if( str[0] == 'client' && str[1] ){
+      $('#client').css( 'display', 'block' );
+    }
+  });
+});
+
+function buyItem( name, amount, currency ){
+  var user_id = $('#user_ids').val();
+  if( user_id ){
+    if( confirm( "ユーザー: " + user_id + " が商品: " + name + " （" + amount + " " + currency + "） を購入しますか？" ) ){
+      $.ajax({
+        type: 'post',
+        url: '/paypay/qrcode',
+        data: { user_id: user_id, productName: name, amount: amount, currency, currency },
+        json: true,
+        success: function( result ){
+          console.log( result );
+          if( result && result.status && result.status == 201 && result.body && result.body.data ){
+            var merchantPaymentId = result.body.data.merchantPaymentId; //. 支払いID(キャンセル時に必要）
+            var codeId = result.body.data.codeId; //. QRコードID（QRコード削除時に必要）
+            var url = result.body.data.url;  //. QRコードが表示されるページの URL
+    
+            if( url ){
+              //. QRコードが表示されるページを開く
+              location.href = url;
+            }
+          }
+        },
+        error: function( e0, e1, e2 ){
+          console.log( e0, e1, e2 );
+          location.href = '/';
+        }
+      });
+    }
+  }else{
+    alert( '最初にユーザーを選択してください。' );
+  }
+}
+</script>
+</body>
+</html>
