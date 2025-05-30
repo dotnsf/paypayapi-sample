@@ -1,4 +1,4 @@
-//. db_cloudant.js
+//. db_postgres.js
 var express = require( 'express' ),
     bodyParser = require( 'body-parser' ),
     api = express();
@@ -23,15 +23,15 @@ api.use( express.Router() );
 
 
 //. createTransaction
-api.createTransaction = async function( transaction_id, user_id, order_id, amount, currency ){
+api.createTransaction = async function( transaction_id, order_id, amount, currency ){
   return new Promise( async function( resolve, reject ){
     if( pg ){
       conn = await pg.connect();
       if( conn ){
         try{
-          var sql = 'insert into transactions( id, user_id, order_id, amount, currency, created ) values ( $1, $2, $3, $4, $5, $6 )';
+          var sql = 'insert into transactions( id, order_id, amount, currency, created ) values ( $1, $2, $3, $4, $5 )';
           var t = ( new Date() ).getTime();
-          var query = { text: sql, values: [ transaction_id, user_id, order_id, amount, currency, t ] };
+          var query = { text: sql, values: [ transaction_id, order_id, amount, currency, t ] };
           conn.query( query, function( err, result ){
             if( err ){
               console.log( err );

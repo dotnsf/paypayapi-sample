@@ -33,18 +33,10 @@ html, body{
 
 <div class="container_">
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/">PayPayAPI - sample</a>
+    <a class="navbar-brand" href="/">PayPayAPI - サンプル</a>
     <ul class="navbar-nav mr-auto">
     </ul>
     <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <select id="user_ids">
-          <option value="">（ユーザー選択）</option>
-<% if( user_ids && user_ids.length > 0 ){ for( var i = 0; i < user_ids.length; i ++ ){ %>
-          <option value="<%= user_ids[i] %>"><%= user_ids[i] %></option>
-<% } } %>
-        </select>
-      </li>
     </ul>
   </nav>
 </div>
@@ -54,7 +46,7 @@ html, body{
     <table id="transactions_table" class="table table-bordered">
       <thead>
         <tr>
-          <th>名前</th><th>価格</th><th>actions</th>
+          <th>名前</th><th>価格</th><th>アクション</th>
         </tr>
       </thead>
       <tbody>
@@ -95,35 +87,30 @@ $(function(){
 });
 
 function buyItem( name, amount, currency ){
-  var user_id = $('#user_ids').val();
-  if( user_id ){
-    if( confirm( "ユーザー: " + user_id + " が商品: " + name + " （" + amount + " " + currency + "） を購入しますか？" ) ){
-      $.ajax({
-        type: 'post',
-        url: '/paypay/qrcode',
-        data: { user_id: user_id, productName: name, amount: amount, currency, currency },
-        json: true,
-        success: function( result ){
-          console.log( result );
-          if( result && result.status && result.status == 201 && result.body && result.body.data ){
-            var merchantPaymentId = result.body.data.merchantPaymentId; //. 支払いID(キャンセル時に必要）
-            var codeId = result.body.data.codeId; //. QRコードID（QRコード削除時に必要）
-            var url = result.body.data.url;  //. QRコードが表示されるページの URL
-    
-            if( url ){
-              //. QRコードが表示されるページを開く
-              location.href = url;
-            }
+  if( confirm( "商品: " + name + " （" + amount + " " + currency + "） を購入しますか？" ) ){
+    $.ajax({
+      type: 'post',
+      url: '/paypay/qrcode',
+      data: { productName: name, amount: amount, currency, currency },
+      json: true,
+      success: function( result ){
+        console.log( result );
+        if( result && result.status && result.status == 201 && result.body && result.body.data ){
+          var merchantPaymentId = result.body.data.merchantPaymentId; //. 支払いID(キャンセル時に必要）
+          var codeId = result.body.data.codeId; //. QRコードID（QRコード削除時に必要）
+          var url = result.body.data.url;  //. QRコードが表示されるページの URL
+  
+          if( url ){
+            //. QRコードが表示されるページを開く
+            location.href = url;
           }
-        },
-        error: function( e0, e1, e2 ){
-          console.log( e0, e1, e2 );
-          location.href = '/';
         }
-      });
-    }
-  }else{
-    alert( '最初にユーザーを選択してください。' );
+      },
+      error: function( e0, e1, e2 ){
+        console.log( e0, e1, e2 );
+        location.href = '/';
+      }
+    });
   }
 }
 </script>

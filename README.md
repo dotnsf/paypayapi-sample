@@ -7,16 +7,6 @@ Sample applicatoin with Node.js for PayPay API
 
 ## Configuration
 
-- testuserids.json
-  - テストユーザー ID の配列
-  - 「どのユーザーが取引したか」を識別するための ID
-    - 記録するトランザクションにユーザーに関する情報がないと問い合わせ対応や返金対応ができなくなる
-  - PayPay Developer の SandBox 環境で使う場合は、アカウント作成時に提供されるテストユーザーの電話番号をそのまま使うのがおススメ
-  - 本来はユーザー管理の仕組みが別途あって、そのログインユーザーの ID を取り出して使うべきもの
-
-  - **というわけで、自分のテスト環境で使うユーザー ID の配列に書き直しておく**
-    - 適当な文字列の配列でもいい
-
 - items.json
   - 取り扱う商品の一覧
   - 商品名、価格、通貨単位の情報を持つ JSON 配列
@@ -40,7 +30,7 @@ Sample applicatoin with Node.js for PayPay API
 
   - `$ docker container exec -it mypostgres psql -h localhost -U admin -d mydb`
 
-  - `mydb=# create table if not exists transactions ( id varchar(100) not null primary key, user_id varchar(50) default '', order_id varchar(50) not null, amount int default 0, currency varchar(10) default '', created bigint default 0 );`
+  - `mydb=# create table if not exists transactions ( id varchar(100) not null primary key, order_id varchar(50) not null, amount int default 0, currency varchar(10) default '', created bigint default 0 );`
 
   - `mydb=# \q`
 

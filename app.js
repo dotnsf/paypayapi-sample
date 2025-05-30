@@ -34,15 +34,12 @@ var dbapi = require( './api/db_postgresql' );
 app.use( '/db', dbapi );
 
 
-//. ユーザーを識別する ID
-var user_ids = JSON.parse( fs.readFileSync( './testuserids.json' ) );
-
 //. 購入画面
 app.get( '/', async function( req, res ){
   //. 対象商品
   var items = JSON.parse( fs.readFileSync( './items.json' ) );
 
-  res.render( 'index', { items: items, user_ids: user_ids } );
+  res.render( 'index', { items: items } );
 });
 
 //. 管理画面
@@ -110,15 +107,12 @@ app.post( '/paypay/qrcode', function( req, res ){
       isAuthorization: false,
       redirectUrl: PAYPAY_REDIRECT_URL,
       redirectType: "WEB_LINK",
-      userAgent: 'PayPay App/0.0.1'
+      userAgent: 'PayPayAPI Sample App/0.0.1'
     };
     PAYPAY.QRCodeCreate( payload, function( response ){
       //console.log( response );
       if( response.STATUS && response.STATUS >= 200 && response.STATUS < 300 ){   //. 実際は 201
         var qr_data = response.BODY.data;
-
-        //. 本来はログイン中のユーザー ID を取り出していれるべき
-        qr_data.user = req.body.user_id;
 
         req.session.qr_data = qr_data;
         res.write( JSON.stringify( { status: response.STATUS, body: JSON.parse( response.BODY ) } ) );
@@ -224,8 +218,18 @@ app.get( '/paypay/redirect', async function( req, res ){
 
   var qr_data = req.session.qr_data;
   //. console.log( {qr_data} );
-  if( qr_data.user ){
-    await dbapi.createTransaction( qr_data.merchantPaymentId, qr_data.user, qr_data.codeId, qr_data.amount.amount, qr_data.amount.currency );
+  if( qr_data.merchantPaymentId ){
+    var order_id = '';
+    var response = await PAYPAY.GetCodePaymentDetails( Array( qr_data.merchantPaymentId ) );
+    console.log( {response} );
+    if( response.STATUS && response.STATUS >= 200 && response.STATUS < 300 ){   //. 実際は 201
+      var body = JSON.parse( response.BODY );
+      if( body && body.data && body.data.paymentId ){
+        order_id = body.data.paymentId;
+      }
+    }
+
+    await dbapi.createTransaction( qr_data.merchantPaymentId, order_id, qr_data.amount.amount, qr_data.amount.currency );
       /*
       response.BODY = {
         resultInfo: {
