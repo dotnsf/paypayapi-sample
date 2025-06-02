@@ -26,7 +26,7 @@ api.use( express.Router() );
 api.createTransaction = async function( transaction_id, order_id, amount, currency ){
   return new Promise( async function( resolve, reject ){
     if( pg ){
-      conn = await pg.connect();
+      var conn = await pg.connect();
       if( conn ){
         try{
           var sql = 'insert into transactions( id, order_id, amount, currency, created ) values ( $1, $2, $3, $4, $5 )';
@@ -61,7 +61,7 @@ api.createTransaction = async function( transaction_id, order_id, amount, curren
 api.getTransactions = async function( limit, offset ){
   return new Promise( async function( resolve, reject ){
     if( pg ){
-      conn = await pg.connect();
+      var conn = await pg.connect();
       if( conn ){
         try{
           var sql = "select * from transactions order by created desc";

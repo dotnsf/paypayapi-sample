@@ -185,14 +185,14 @@ html, body{
     <table id="transactions_table" class="table table-bordered">
       <thead>
         <tr>
-          <th>#</th><th>user_id</th><th>amount</th><th>created</th><th>actions</th>
+          <th>#</th><th>order_id</th><th>amount</th><th>created</th><th>actions</th>
         </tr>
       </thead>
       <tbody>
 <% for( var i = 0; i < transactions.length; i ++ ){ %>
         <tr>
           <td><%= transactions[i].id %></td>
-          <td><%= transactions[i].user_id %></td>
+          <td><%= transactions[i].order_id %></td>
           <td><%= transactions[i].amount %> <%= transactions[i].currency %></td>
           <td><%= timestamp2datetime( transactions[i].created ) %></td>
           <td>
