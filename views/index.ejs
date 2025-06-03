@@ -37,6 +37,9 @@ html, body{
     <ul class="navbar-nav mr-auto">
     </ul>
     <ul class="navbar-nav ml-auto">
+      <li class="navbar-item">
+        <a class="nav-link" target="_blank" href="/admin">管理画面</a>
+      </li>
     </ul>
   </nav>
 </div>
@@ -52,7 +55,12 @@ html, body{
       <tbody>
 <% for( var i = 0; i < items.length; i ++ ){ %>
         <tr>
-          <td><%= items[i].name %></td>
+          <td>
+            <%= items[i].name %>
+            <% if( items[i].imageurl ){ %>
+              <br/><img src="<%= items[i].imageurl %>" width="100px"/>
+            <% } %>
+          </td>
           <td><%= items[i].amount %> <%= items[i].currency %></td>
           <td>
             <button class="btn btn-xs btn-warning" onClick="buyItem('<%= items[i].name %>',<%= items[i].amount %>,'<%= items[i].currency %>');">Buy</button>

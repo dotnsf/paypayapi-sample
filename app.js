@@ -43,6 +43,33 @@ app.get( '/', async function( req, res ){
 });
 
 //. 管理画面
+var ADMIN_ID = ( 'ADMIN_ID' in process.env && process.env.ADMIN_ID ? process.env.ADMIN_ID : '' );
+var ADMIN_PW = ( 'ADMIN_PW' in process.env && process.env.ADMIN_PW ? process.env.ADMIN_PW : '' );
+app.use( '/admin', async function( req, res, next ){
+  if( ADMIN_ID && ADMIN_PW ){
+    //. 要認証
+    if( req.headers.authorization ){
+      var b64auth = req.headers.authorization.split( ' ' )[1] || '';
+      var [ admin_id, admin_pw ] = Buffer.from( b64auth, 'base64' ).toString().split( ':' );
+      if( ADMIN_ID == admin_id && ADMIN_PW == admin_pw ){
+        //. ID & PW が正しかった
+        return next();
+      }else{
+        //. ID & PW が正しくなかった
+        res.set( 'WWW-Authenticate', 'Basic realm="401"' );
+        res.status( 401 ).send( 'Authentication required.' );
+      }
+    }else{
+      //. ID & PW が未入力
+      res.set( 'WWW-Authenticate', 'Basic realm="401"' );
+      res.status( 401 ).send( 'Authentication required.' );
+    }
+  }else{
+    //. 認証不要
+    return next();
+  }
+});
+
 app.get( '/admin', async function( req, res ){
   var transactions = [];
   var limit = 0;

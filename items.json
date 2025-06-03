@@ -1,16 +1,19 @@
 [
   {
     "name": "商品Ａ",
+    "imageurl": "/item-a.png",
     "amount": 500,
     "currency": "JPY"
   },
   {
     "name": "商品Ｂ",
+    "imageurl": "/item-b.png",
     "amount": 1000,
     "currency": "JPY"
   },
   {
     "name": "商品Ｃ",
+    "imageurl": "/item-c.png",
     "amount": 1200,
     "currency": "JPY"
   }
