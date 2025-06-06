@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"/>
+<title>PayPayAPI - sample - 概説画面</title>
+<script type="text/javascript" src="//code.jquery.com/jquery-2.2.4.min.js"></script>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" rel="stylesheet"/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js"></script>
+
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+<meta name="apple-mobile-web-app-title" content="PayPayAPI - sample - 概説画面"/>
+
+<script>
+$(function(){
+});
+</script>
+
+<style type="text/css">
+html, body{
+  /*text-align: center;*/
+  background-color: #fafafa;
+  font-size: 20px;
+  color: #333;
+}
+
+.about{
+  margin-bottom: 20px;
+}
+
+.about-image{
+  width: 80%;
+  margin-bottom: 20px;
+}
+
+.under-construction{
+  color: #c00;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container">
+    <a class="navbar-brand" href="/">PayPayAPI - サンプル - 概説画面</a>
+    <ul class="navbar-nav mr-auto">
+    </ul>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="about">
+    本サービスは <a target="_blank" href="https://developer.paypay.ne.jp/account/signup">PayPay API</a> を使って商品購入を実現し、そのトランザクション管理をするためのサンプルアプリケーションです。
+    なお利用時には実際に支払い可能な PayPay アカウントではなく、PayPay for Developers のテストユーザーアカウントでログインして動作確認してください。
+  </div>
+  <div class="about">
+    商品を購入するにはトップページから購入する商品の "Buy" ボタンをクリックします。PayPay の QR コードが表示されるのでテストユーザーアカウントでログインした PayPay アプリを使ってスキャンし、決済してください。
+  </div>
+  <div class="about">
+    決済の記録は管理画面から確認することができます。管理画面はトップページ内上部の "管理画面" リンクから移動できます。
+    過去に発生したトランザクションが記録されており、ステータスを確認することも可能です。
+  </div>
+  <div class="about">
+    クーリングオフなどの理由で返金処理が必要になった場合は管理画面から行うことができます。
+    まず返金対応が必要なトランザクションの order_id を（お客様の PayPay アプリ購入履歴から）求めて、その order_id で管理画面内の該当トランザクションを特定します。
+    トランザクションが特定できたら "Refund" ボタンをクリックして、返金理由（例：「クーリングオフ」）を入力することで返金できます。
+    返金されるとお客様の PayPay アプリで返金が確認でき、同時にトランザクションのステータスは "REFUNDED" となります。
+  </div>
+</div>
+
+</body>
+</html>
