@@ -248,7 +248,7 @@ app.get( '/paypay/redirect', async function( req, res ){
   if( qr_data.merchantPaymentId ){
     var order_id = '';
     var response = await PAYPAY.GetCodePaymentDetails( Array( qr_data.merchantPaymentId ) );
-    console.log( {response} );
+    //console.log( {response} );
     if( response.STATUS && response.STATUS >= 200 && response.STATUS < 300 ){   //. 実際は 201
       var body = JSON.parse( response.BODY );
       if( body && body.data && body.data.paymentId ){

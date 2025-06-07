@@ -63,6 +63,7 @@ function getTransaction( transaction_id ){
     success: function( result ){
       if( typeof result == 'string' ){ result = JSON.parse( result ); }
       $('#transaction_detail').html( JSON.stringify( result, null, 2 ) );
+      $('#transactionModalLabel').html( result.body.data.status );
 
       if( result.body.data.status == 'REFUNDED' ){
         $('#' + transaction_id + '-refund' ).prop( 'disabled', true );
@@ -89,6 +90,7 @@ function cancelTransaction( transaction_id ){
       success: function( result ){
         if( typeof result == 'string' ){ result = JSON.parse( result ); }
         $('#transaction_detail').html( JSON.stringify( result, null, 2 ) );
+        $('#transactionModalLabel').html( result.body.data.status );
 
         if( result.body.data.status == 'REFUNDED' ){
           $('#' + transaction_id + '-refund' ).prop( 'disabled', true );
@@ -119,6 +121,7 @@ function refundTransaction( transaction_id ){
           success: function( result ){
             if( typeof result == 'string' ){ result = JSON.parse( result ); }
             $('#transaction_detail').html( JSON.stringify( result, null, 2 ) );
+            $('#transactionModalLabel').html( result.body.data.status );
 
             if( result.body.data.status == 'REFUNDED' ){
               $('#' + transaction_id + '-refund' ).prop( 'disabled', true );
